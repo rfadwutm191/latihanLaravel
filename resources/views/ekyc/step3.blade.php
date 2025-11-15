@@ -10,6 +10,16 @@
             </div>
         @endif
 
+         @if ($errors->any())
+            <div class="bg-red-100 text-red-700 p-3 mb-4 rounded">
+                <ul class="list-disc ml-4 text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('ekyc.step3.store') }}" enctype="multipart/form-data" class="space-y-4">
             @csrf
 
@@ -59,6 +69,7 @@
                 <button type="submit"
                     class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                     Simpan & Lanjut
+                    <
                 </button>
             </div>
         </form>

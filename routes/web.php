@@ -7,10 +7,9 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MatakuliahController;
 use App\Http\Controllers\Auth\StudentRegisterController;
 use App\Http\Controllers\EkycController;
+use App\Http\Controllers\Admin\EkycAdminController;
 
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +31,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/mahasiswa/{id}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
     Route::delete('/mahasiswa/{id}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
 
+
+    Route::prefix('admin')->group(function () {
+        Route::get('/ekyc', [EkycAdminController::class, 'index'])->name('admin.ekyc.index');
+        Route::get('/ekyc/{id}', [EkycAdminController::class, 'show'])->name('admin.ekyc.show');
+        Route::put('/ekyc/{id}/verify', [EkycAdminController::class, 'verify'])->name('admin.ekyc.verify');
+        // atau Route::patch('/ekyc/{id}/verify', ...)
+    });
+
     //Ruangan
     Route::get('/ruangan', [RuanganController::class, 'index'])->name('ruangan.index');
     Route::post('/ruangan', [RuanganController::class, 'store'])->name('ruangan.store');
@@ -46,27 +53,34 @@ Route::middleware('auth')->group(function () {
     Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');
     Route::delete('/dosen/{id}', [DosenController::class, 'destroy'])->name('dosen.destroy');
 
-     //Matakuliah
+    //Matakuliah
     Route::get('/matakuliah', [MatakuliahController::class, 'index'])->name('matakuliah.index');
     Route::post('/matakuliah', [MatakuliahController::class, 'store'])->name('matakuliah.store');
     Route::get('/matakuliah/{id}/edit', [MatakuliahController::class, 'edit'])->name('matakuliah.edit');
     Route::put('/matakuliah/{id}', [MatakuliahController::class, 'update'])->name('matakuliah.update');
     Route::delete('/matakuliah/{id}', [MatakuliahController::class, 'destroy'])->name('matakuliah.destroy');
+});
 
-    //Registrasi
-    Route::get('/register-mahasiswa', [StudentRegisterController::class, 'showRegistrationForm'])->name('register.mahasiswa');
-    Route::post('/register-mahasiswa', [StudentRegisterController::class, 'register']);
+//Registrasi
+Route::get('/register-mahasiswa', [StudentRegisterController::class, 'showRegistrationForm'])->name('register.mahasiswa');
+Route::post('/register-mahasiswa', [StudentRegisterController::class, 'register']);
 
-    Route::middleware(['auth'])->prefix('ekyc')->group(function () {
+Route::middleware(['auth'])->prefix('ekyc')->group(function () {
     Route::get('step1', [EkycController::class, 'step1'])->name('ekyc.step1');
     Route::post('step1', [EkycController::class, 'storeStep1'])->name('ekyc.storeStep1');
 
     Route::get('/ekyc/step2', [EkycController::class, 'step2'])->name('ekyc.step2');
-    Route::post('/ekyc/step2', [EkycController::class,'storeStep2'])->name('ekyc.step2.store');
+    Route::post('/ekyc/step2', [EkycController::class, 'storeStep2'])->name('ekyc.step2.store');
 
     Route::get('/ekyc/step3', [EkycController::class, 'showStep3'])->name('ekyc.step3');
-    Route::post('/ekyc/step3', [EkycController::class,'storeStep3'])->name('ekyc.step3.store');
- });
+    Route::post('/ekyc/step3', [EkycController::class, 'storeStep3'])->name('ekyc.step3.store');
+
+    Route::get('/ekyc/step4', [EkycController::class, 'showStep4'])->name('ekyc.step4');
+    Route::post('/ekyc/step4', [EkycController::class, 'storeStep4'])->name('ekyc.step4.store');
+
+    Route::get('/ekyc/step5', [EkycController::class, 'step5'])->name('ekyc.step5');
+
+    Route::get('status', [App\Http\Controllers\EkycController::class, 'status'])->name('ekyc.status');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
