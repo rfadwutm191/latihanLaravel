@@ -14,7 +14,6 @@ use App\Http\Controllers\Admin\LandingSettingController;
 use App\Http\Controllers\Admin\LandingNavController;
 use App\Http\Controllers\Admin\LandingProgramController;
 use App\Http\Controllers\Admin\LandingFooterController;
-use App\Http\Controllers\LandingFooterController as ControllersLandingFooterController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -49,13 +48,18 @@ Route::middleware('auth')->group(function () {
 
     //Landing Page CMS
     Route::prefix('admin/landing')->name('admin.landing.')->group(function () {
-    Route::resource('settings', LandingSettingController::class)->only(['index','edit','update']);
-    Route::resource('navigation', LandingNavController::class)->except(['show']);
-    Route::resource('programs', LandingProgramController::class)->except(['show']);
-    Route::resource('footer', ControllersLandingFooterController::class)->except(['show']);
-    Route::post('footer/reorder', [ControllersLandingFooterController::class, 'reorder'])->name('admin.landing.footer.reorder');
-    Route::patch('footer/{id}/status', [ControllersLandingFooterController::class, 'toggleStatus'])->name('admin.landing.footer.toggleStatus');
-});
+        Route::resource('settings', LandingSettingController::class)->only([
+            'index','store', 'edit', 'update'
+        ]);
+        Route::resource('navigation', LandingNavController::class)->except(['show']);
+        Route::resource('programs', LandingProgramController::class)->except(['show']);
+        Route::resource('footer', LandingFooterController::class)->except(['show']);
+
+        // Route::post('footer/reorder', [LandingFooterController::class, 'reorder'])->name('admin.landing.footer.reorder');
+        // Route::patch('footer/{id}/status', [LandingFooterController::class, 'toggleStatus'])->name('admin.landing.footer.toggleStatus');
+        Route::post('/footer/reorder', [LandingFooterController::class, 'reorder'])->name('footer.reorder');
+        Route::patch('/footer/{id}/status', [LandingFooterController::class, 'toggleStatus'])->name('footer.toggleStatus');
+    });
 
     //Ruangan
     Route::get('/ruangan', [RuanganController::class, 'index'])->name('ruangan.index');

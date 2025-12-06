@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\LandingFooterLink;
 use Illuminate\Http\Request;
 
@@ -9,7 +10,7 @@ class LandingFooterController extends Controller
 {
     /**
      * Display a listing of the footer links.
-     */
+     */ 
     public function index()
     {
         $links = LandingFooterLink::orderBy('position')->get();
@@ -31,7 +32,7 @@ class LandingFooterController extends Controller
     {
         $request->validate([
             'label'   => 'required|string|max:100',
-            'url'     => 'nullable|url|max:255',
+            'url'     => 'nullable|string|max:255',
             'status'  => 'required|boolean',
         ]);
 
@@ -64,7 +65,7 @@ class LandingFooterController extends Controller
     {
         $request->validate([
             'label'   => 'required|string|max:100',
-            'url'     => 'nullable|url|max:255',
+            'url'     => 'nullable|string|max:255',
             'status'  => 'required|boolean',
         ]);
 

@@ -27,11 +27,12 @@ class LandingProgramController extends Controller
             'image'    => 'nullable|image|max:2048'
         ]);
 
-        $data = $request->all();
+        $data = $request->except('image');
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('landing/programs', 'public');
-        }
+    if ($request->hasFile('image')) {
+        $data['image'] = $request->file('image')->store('landing/programs', 'public');
+    }
+
 
         LandingProgram::create($data);
 
@@ -44,24 +45,27 @@ class LandingProgramController extends Controller
         return view('admin.landing.program.edit', compact('program'));
     }
 
-    public function update(Request $request, $id)
+        public function update(Request $request, $id)
     {
         $program = LandingProgram::findOrFail($id);
 
         $request->validate([
             'title'    => 'required',
             'position' => 'required|integer',
+            'image'    => 'nullable|image|max:2048'
         ]);
 
-        $data = $request->all();
+        $data = $request->except('image');
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('landing/programs', 'public');
+            $path = $request->file('image')->store('storage/landing/programs', 'public');
+            $data['image'] = $path;
         }
 
         $program->update($data);
 
-        return redirect()->route('admin.landing.programs.index')->with('success', 'Program updated');
+        return redirect()->route('admin.landing.programs.index')
+                        ->with('success', 'Program updated');
     }
 
     public function destroy($id)

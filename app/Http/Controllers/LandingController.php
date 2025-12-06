@@ -28,12 +28,26 @@ class LandingController extends Controller
                 ->get();
         });
 
-        $footer = Cache::remember('landing_footer', 60, function () {
+        // $footer = Cache::remember('landing_footer', 60, function () {
+        //     return LandingFooterLink::where('status', 1)
+        //         ->orderBy('position')
+        //         ->get();
+     
+        // });
+
+        $footer = Cache::remember('landing_footer', 5, function () {
             return LandingFooterLink::where('status', 1)
+                                    ->where('group', '!=' ,NULL)
+                                    ->orderBy('position')
+                                    ->get();
+        });
+
+        $footerNav = Cache::remember('landing_footer', 5, function () {
+            return LandingFooterLink::where('group', 'nav')
                 ->orderBy('position')
                 ->get();
         });
 
-        return view('welcome', compact('landing', 'programs', 'navigation', 'footer'));
+        return view('welcome', compact('landing', 'programs', 'navigation', 'footer', 'footerNav'));
     }
 }

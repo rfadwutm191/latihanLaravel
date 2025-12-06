@@ -1,56 +1,58 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LP3I - Kampus Vokasi Terbaik</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-white text-gray-800">
 
     <!-- NAVBAR -->
     <header class="w-full py-4 bg-blue-900 shadow-sm fixed top-0 left-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
-            
+
             {{-- <div class="flex items-center">
                 <img src="{{ asset('image/logoLp3i.jpg') }}" alt="Logo" class="h-10 w-auto">
             </div> --}}
             <h1 class="text-2xl font-bold text-white">LP3I</h1>"
+            {{-- <nav class="hidden md:flex gap-8 text-white font-medium">
+                <a href="#beranda" class="hover:text-blue-600">Beranda</a>
+                <a href="#program" class="hover:text-blue-600">Program</a>
+                <a href="#tentang" class="hover:text-blue-600">Tentang</a>
+                <a href="#kontak" class="hover:text-blue-600">Kontak</a>
+            </nav> --}}
             <nav class="hidden md:flex gap-8 text-white font-medium">
-                <a href="#beranda" class="hover:text-blue-300">Beranda</a>
-                <a href="#program" class="hover:text-blue-300">Program</a>
-                <a href="#tentang" class="hover:text-blue-300">Tentang</a>
-                <a href="#kontak" class="hover:text-blue-300">Kontak</a>
+                @foreach ($navigation as $nav)
+                    <a href="{{ $nav->url }}" class="hover:text-blue-600">
+                        {{ $nav->label }}
+                    </a>
+                @endforeach
             </nav>
-
             <div class="flex gap-3">
                 @if (Route::has('login'))
-                <nav class="flex items-center justify-end gap-4">
-                    @auth
-                    <a
-                        href="{{ url('/dashboard') }}"
-                        class="px-4 py-2 bg-white-600 text-white rounded-lg font-medium hover:bg-blue-700"
-                    >
-                        Dashboard
-                    </a>
-                    @else
-                    <a
-                        href="{{ route('login') }}"
-                        class="px-4 py-2 text-white font-semibold border border-white rounded-lg"
-                    >
-                        Log in
-                    </a>
+                    <nav class="flex items-center justify-end gap-4">
+                        @auth
+                            <a href="{{ url('/dashboard') }}"
+                                class="px-4 py-2 bg-white-600 text-white rounded-lg font-medium hover:bg-blue-700">
+                                Dashboard
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}"
+                                class="px-4 py-2 text-white font-semibold border border-white rounded-lg">
+                                Log in
+                            </a>
 
-                    @if (Route::has('register'))
-                    <a
-                        href="{{ route('register') }}"
-                        class="px-4 py-2 bg-white text-blue-900 rounded-lg font-medium hover:bg-blue-700"
-                    >
-                        Register
-                    </a>
-                    @endif
-                    @endauth
-                </nav>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}"
+                                    class="px-4 py-2 bg-white text-blue-900 rounded-lg font-medium hover:bg-blue-700">
+                                    Register
+                                </a>
+                            @endif
+                        @endauth
+                    </nav>
                 @endif
             </div>
         </div>
@@ -66,20 +68,19 @@
                     {{ $landing['hero_title'] ?? 'Kampus Vokasi Terbaik<br />Untuk Masa Depan Karier Anda' }}
                 </h2>
                 <p class="text-lg text-gray-600 mb-8">
-                    {!! $landing['hero_subtitle'] ?? 'Solusi Pendidikan Masa Depan'!!}
+                    {!! $landing['hero_subtitle'] ?? 'Solusi Pendidikan Masa Depan' !!}
                 </p>
 
                 <div class="flex gap-4">
                     @if (Route::has('register'))
-                    <a
-                        href="{{ route('register') }}"
-                        class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold text-lg hover:bg-blue-700">
-                        Daftar Sekarang
-                    </a>
+                        <a href="{{ route('register') }}"
+                            class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold text-lg hover:bg-blue-700">
+                            Daftar Sekarang
+                        </a>
                     @endif
 
                     <a href="#program"
-                       class="px-6 py-3 border border-blue-600 text-blue-600 rounded-lg font-semibold text-lg hover:bg-blue-50">
+                        class="px-6 py-3 border border-blue-600 text-blue-600 rounded-lg font-semibold text-lg hover:bg-blue-50">
                         Lihat Program
                     </a>
                 </div>
@@ -88,8 +89,7 @@
             <!-- Image -->
             <div class="flex justify-center">
                 <!-- konten : banner image -->
-                <img src="{{ asset('uploads/' . ($landing['hero_image'] ?? 'default-hero.jpg')) }}"
-                    alt="Mahasiswa LP3I"
+                <img src="{{ asset('storage/' . ($landing['hero_image'] ?? 'default-hero.jpg')) }}" alt="Mahasiswa LP3I"
                     class="w-full max-w-2xl object-cover object-cover rounded-xl shadow-lg" />
             </div>
         </div>
@@ -101,15 +101,15 @@
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h3 class="text-3xl font-bold text-gray-900 mb-10">Program Pendidikan</h3>
 
-                <div class="grid md:grid-cols-3 gap-8">
-                @foreach($programs as $program)
-                <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-lg transition">
-                    <h4 class="text-xl font-semibold mb-3">{{ $program->name }}</h4>
-                    <p class="text-gray-600">{{ $program->description }}</p>
-                </div>
-                 @endforeach
+            <div class="grid md:grid-cols-3 gap-8">
+                @foreach ($programs as $program)
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-lg transition">
+                        <h4 class="text-xl font-semibold mb-3">{{ $program->name }}</h4>
+                        <p class="text-gray-600">{{ $program->description }}</p>
+                    </div>
+                @endforeach
             </div>
-            
+
         </div>
     </section>
 
@@ -131,8 +131,7 @@
             </div>
 
             <div>
-                <img src="{{ asset('uploads/landing/mahasiswa-lp3i.png') }}"
-                     class="rounded-xl shadow-lg"/>
+                <img src="{{ asset('storage/landing/mahasiswa-lp3i.png') }}" class="rounded-xl shadow-lg" />
             </div>
 
         </div>
@@ -151,17 +150,18 @@
             <div>
                 <h4 class="text-xl font-semibold mb-3">Navigasi</h4>
                 <ul class="space-y-2 text-gray-100">
-                    <li><a href="#beranda" class="hover:underline">Beranda</a></li>
-                    <li><a href="#program" class="hover:underline">Program</a></li>
-                    <li><a href="#tentang" class="hover:underline">Tentang</a></li>
-                    <li><a href="#kontak" class="hover:underline">Kontak</a></li>
+                    @foreach ($footerNav as $itemNav)
+                        <li><a href="{{ $itemNav->url }}" class="hover:underline">
+                                {{ $itemNav->label }}
+                            </a></li>
+                    @endforeach
                 </ul>
             </div>
 
             <div>
                 <h4 class="text-xl font-semibold mb-3">Hubungi Kami</h4>
-                <p class="text-gray-100">Email: info@lp3i.ac.id</p>
-                <p class="text-gray-100">Telp: (021) 12345678</p>
+                <p class="text-white">Email: info@lp3i.ac.id</p>
+                <p class="text-white">Telp: (021) 12345678</p>
             </div>
 
         </div>
@@ -172,4 +172,5 @@
     </footer>
 
 </body>
+
 </html>

@@ -20,21 +20,58 @@ class LandingSettingController extends Controller
         return view('admin.landing.settings.edit', compact('setting'));
     }
 
-    public function update(Request $request, $id)
-    {
-        $setting = LandingSetting::findOrFail($id);
+   public function update(Request $request, $id)
+{
+    $setting = LandingSetting::findOrFail($id);
 
-        if ($setting->type == 'image') {
-            $request->validate(['value' => 'image|mimes:jpg,png,webp,svg|max:2048']);
+    if ($setting->type == 'image') {
+
+        // Hanya proses jika user upload file baru
+        if ($request->hasFile('value')) {
+            $request->validate([
+                'value' => 'image|mimes:jpg,png,webp,svg|max:2048'
+            ]);
+
             $path = $request->file('value')->store('landing', 'public');
             $setting->value = $path;
-        } else {
-            $request->validate(['value' => 'required']);
-            $setting->value = $request->value;
         }
 
-        $setting->save();
+    } else {
+        $request->validate(['value' => 'required']);
+        $setting->value = $request->value;
+    }
 
-        return redirect()->route('admin.landing.settings.index')->with('success', 'Setting updated successfully');
+    $setting->save();
+
+    return redirect()->route('admin.landing.settings.index')
+                     ->with('success', 'Setting updated successfully');
+}
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'key'    => 'required|string',
+            'type'   => 'required|string',
+            'value'  => 'nullable',
+            'status' => 'required|boolean'
+        ]);
+
+        $value = $request->value;
+
+        // Jika type = image, handle upload
+        if ($request->type === 'image' && $request->hasFile('image')) {
+            $value = $request->file('image')->store('landing', 'public');
+        }
+
+        LandingSetting::create([
+            'key'   => $request->key,
+            'value' => $value,
+            'type'  => $request->type,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('admin.landing.settings.index')
+            ->with('success', 'Setting created successfully');
     }
 }

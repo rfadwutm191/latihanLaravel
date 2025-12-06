@@ -98,21 +98,19 @@
                                             {{ request()->routeIs('admin.landing.footer.*') ? 'bg-gray-200 font-semibold' : '' }}">
                                     📄 Footer
                                 </a>
-                                
+
                             </div>
                         </div>
-                   </div>
-             </div>
-          @endif
-        </nav>
-    </aside>
+                @endif
+                </nav>
+            </aside>
 
-    {{-- KONTEN UTAMA di kanan --}}
-    <main class="flex-1 p-6">
-        {{ $slot ?? '' }}
-        @yield('content')
-    </main>
-    </div>
+            {{-- KONTEN UTAMA di kanan --}}
+            <main class="flex-1 p-6">
+                {{ $slot ?? '' }}
+                @yield('content')
+            </main>
+        </div>
     </div>
 </body>
 
